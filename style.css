@@ -1,0 +1,270 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.app-container {
+    width: 400px;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+/* Tabs Styling */
+.tabs {
+    display: flex;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.tab {
+    flex: 1;
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.tab.active {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+/* Tab Content Styling */
+.tab-content {
+    display: none;
+    padding: 20px;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Clock Tab Styles */
+#time-display {
+    font-size: 3rem;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+#date-display {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Alarm Tab Styles */
+.alarm-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.alarm-input-section {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+#alarm-time {
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    border-radius: 5px;
+}
+
+#add-alarm-btn {
+    padding: 10px 15px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#add-alarm-btn:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.alarm-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.alarm-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.alarm-item-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.delete-alarm, .snooze-alarm {
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.delete-alarm:hover, .snooze-alarm:hover {
+    opacity: 1;
+}
+
+/* Timer Tab Styles */
+.timer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#timer-display {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.timer-controls {
+    display: flex;
+    gap: 15px;
+}
+
+.timer-controls button {
+    padding: 10px 20px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.timer-controls button:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Settings Tab Styles */
+.settings-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.settings-section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.theme-options {
+    display: flex;
+    gap: 15px;
+}
+
+.theme-btn {
+    padding: 10px 20px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.theme-btn:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+#time-format {
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+/* Theme Variations */
+body.theme-light {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+body.theme-dark {
+    background: linear-gradient(135deg, #000000 0%, #121212 100%);
+    color: white;
+}
+
+body.theme-neon {
+    background: linear-gradient(135deg, #000000 0%, #0f2027 100%);
+    color: #0ff;
+    text-shadow: 0 0 10px #0ff;
+}
+
+#toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.toast {
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    color: white;
+    opacity: 1;
+}
+
+.toast-info { background-color: #3498db; }
+.toast-success { background-color: #2ecc71; }
+.toast-warning { background-color: #f39c12; }
+.toast-alarm { background-color: #e74c3c; }
+
+@keyframes vibrate {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(3px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    70% { transform: translate(3px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(1deg); }
+    90% { transform: translate(1px, 2px) rotate(0deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(-20px); }
+}

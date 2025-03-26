@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Clock App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <div class="tabs">
+            <div class="tab active" data-target="clock">Clock</div>
+            <div class="tab" data-target="alarm">Alarm</div>
+            <div class="tab" data-target="timer">Timer</div>
+            <div class="tab" data-target="settings">Settings</div>
+        </div>
+        
+        <div class="tab-content active" id="clock-tab">
+            <div class="clock-container">
+                <div id="time-display">00:00:00</div>
+                <div id="date-display">Day, Month Date, Year</div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="alarm-tab">
+            <div class="alarm-container">
+                <div class="alarm-input-section">
+                    <input type="time" id="alarm-time">
+                    <button id="add-alarm-btn">Add Alarm</button>
+                </div>
+                <div id="alarm-list" class="alarm-list"></div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="timer-tab">
+            <div class="timer-container">
+                <div id="timer-display">00:00:00</div>
+                <div class="timer-controls">
+                    <button id="start-timer-btn">Start</button>
+                    <button id="reset-timer-btn">Reset</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="settings-tab">
+            <div class="settings-container">
+                <div class="settings-section">
+                    <h3>Themes</h3>
+                    <div class="theme-options">
+                        <button class="theme-btn" data-theme="light">Light</button>
+                        <button class="theme-btn" data-theme="dark">Dark</button>
+                        <button class="theme-btn" data-theme="neon">Neon</button>
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <h3>Time Format</h3>
+                    <select id="time-format">
+                        <option value="12">12-Hour</option>
+                        <option value="24">24-Hour</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
