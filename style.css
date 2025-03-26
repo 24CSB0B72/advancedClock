@@ -24,7 +24,6 @@ body {
     overflow: hidden;
 }
 
-/* Tabs Styling */
 .tabs {
     display: flex;
     background-color: rgba(0, 0, 0, 0.1);
@@ -44,7 +43,6 @@ body {
     color: white;
 }
 
-/* Tab Content Styling */
 .tab-content {
     display: none;
     padding: 20px;
@@ -54,7 +52,6 @@ body {
     display: block;
 }
 
-/* Clock Tab Styles */
 #time-display {
     font-size: 3rem;
     text-align: center;
@@ -66,7 +63,6 @@ body {
     color: rgba(255, 255, 255, 0.7);
 }
 
-/* Alarm Tab Styles */
 .alarm-container {
     display: flex;
     flex-direction: column;
@@ -134,7 +130,6 @@ body {
     opacity: 1;
 }
 
-/* Timer Tab Styles */
 .timer-container {
     display: flex;
     flex-direction: column;
@@ -165,7 +160,6 @@ body {
     background-color: rgba(255, 255, 255, 0.3);
 }
 
-/* Settings Tab Styles */
 .settings-container {
     display: flex;
     flex-direction: column;
@@ -208,7 +202,6 @@ body {
     border-radius: 5px;
 }
 
-/* Theme Variations */
 body.theme-light {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;

@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // DOM Elements
     const tabs = document.querySelectorAll('.tab');
     const tabContents = document.querySelectorAll('.tab-content');
     const themeButtons = document.querySelectorAll('.theme-btn');
@@ -12,34 +11,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const startTimerBtn = document.getElementById('start-timer-btn');
     const resetTimerBtn = document.getElementById('reset-timer-btn');
     const timerDisplay = document.getElementById('timer-display');
-
-    // Create Toast Container
     const toastContainer = document.createElement('div');
     toastContainer.id = 'toast-container';
     document.body.appendChild(toastContainer);
 
-    // Improved Toast Notification Function
     function showToast(message, type = 'info') {
-        // Ensure toast container exists
         const container = document.getElementById('toast-container') || (() => {
             const newContainer = document.createElement('div');
             newContainer.id = 'toast-container';
             document.body.appendChild(newContainer);
             return newContainer;
         })();
-
-        // Create toast element
         const toast = document.createElement('div');
         toast.className = `toast toast-${type}`;
         toast.textContent = message;
-        
-        // Add vibration and animation
         toast.style.animation = 'vibrate 0.5s, fadeIn 0.5s';
-        
-        // Append toast to container
         container.appendChild(toast);
-
-        // Remove toast after 3 seconds
         setTimeout(() => {
             toast.style.animation = 'fadeOut 0.5s';
             setTimeout(() => {
@@ -51,24 +38,127 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 500);
         }, 3000);
     }
+    function showAlarmToast(alarmTime) {
+        const container = document.getElementById('toast-container') || (() => {
+            const newContainer = document.createElement('div');
+            newContainer.id = 'toast-container';
+            document.body.appendChild(newContainer);
+            return newContainer;
+        })();
+        const alarmToast = document.createElement('div');
+        alarmToast.className = 'toast toast-alarm alarm-full-screen';
+        const contentWrapper = document.createElement('div');
+        contentWrapper.innerHTML = `
+            <h2>Alarm</h2>
+            <p>${alarmTime}</p>
+        `;
+        const actionContainer = document.createElement('div');
+        actionContainer.className = 'alarm-actions';
+        const removeAlarmToast = () => {
+            const alarms = JSON.parse(localStorage.getItem('alarms')) || [];
+            const updatedAlarms = alarms.filter(alarm => alarm !== alarmTime);
+            localStorage.setItem('alarms', JSON.stringify(updatedAlarms));
+            renderAlarms();
+            if (alarmToast.parentElement) {
+                alarmToast.parentElement.removeChild(alarmToast);
+            }
+        };
+        const snoozeBtn = document.createElement('button');
+        snoozeBtn.textContent = 'Snooze 5 min';
+        snoozeBtn.className = 'alarm-btn snooze-btn';
+        snoozeBtn.addEventListener('click', () => {
+            const [time, period] = alarmTime.split(' ');
+            const [hours, minutes] = time.split(':').map(Number);
+            let newMinutes = minutes + 5;
+            let newHours = hours;
 
-    // Rest of the existing code remains the same...
-    // Tab Switching
+            if (newMinutes >= 60) {
+                newHours += 1;
+                newMinutes %= 60;
+            }
+            const newTime = `${String(newHours).padStart(2, '0')}:${String(newMinutes).padStart(2, '0')} ${period}`;
+            const alarms = JSON.parse(localStorage.getItem('alarms')) || [];
+            const index = alarms.findIndex(alarm => alarm === alarmTime);
+            if (index !== -1) {
+                alarms[index] = newTime;
+                localStorage.setItem('alarms', JSON.stringify(alarms));
+            }
+            removeAlarmToast();
+            showToast(`Alarm snoozed to ${newTime}`, 'info');
+        });
+        const dismissBtn = document.createElement('button');
+        dismissBtn.textContent = 'Dismiss';
+        dismissBtn.className = 'alarm-btn dismiss-btn';
+        dismissBtn.addEventListener('click', removeAlarmToast);
+        actionContainer.appendChild(snoozeBtn);
+        actionContainer.appendChild(dismissBtn);
+        alarmToast.appendChild(contentWrapper);
+        alarmToast.appendChild(actionContainer);
+        container.appendChild(alarmToast);
+        const styleElement = document.createElement('style');
+        styleElement.textContent = `
+            .alarm-full-screen {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 80%;
+                max-width: 400px;
+                background-color: #e74c3c;
+                color: white;
+                text-align: center;
+                padding: 30px;
+                border-radius: 10px;
+                z-index: 9999;
+                animation: vibrate 0.5s infinite;
+                box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            }
+            .alarm-full-screen h2 {
+                margin-bottom: 20px;
+                font-size: 2rem;
+            }
+            .alarm-full-screen p {
+                font-size: 1.5rem;
+                margin-bottom: 20px;
+            }
+            .alarm-actions {
+                display: flex;
+                justify-content: center;
+                gap: 20px;
+            }
+            .alarm-btn {
+                padding: 10px 20px;
+                border: none;
+                border-radius: 5px;
+                font-size: 1rem;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+            .snooze-btn {
+                background-color: #f39c12;
+                color: white;
+            }
+            .dismiss-btn {
+                background-color: #2c3e50;
+                color: white;
+            }
+            .alarm-btn:hover {
+                opacity: 0.9;
+            }
+        `;
+        document.head.appendChild(styleElement);
+    }
+
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
-            // Remove active class from all tabs and contents
             tabs.forEach(t => t.classList.remove('active'));
             tabContents.forEach(tc => tc.classList.remove('active'));
-
-            // Add active class to clicked tab and corresponding content
             tab.classList.add('active');
-            
             const targetId = tab.getAttribute('data-target') + '-tab';
             document.getElementById(targetId).classList.add('active');
         });
     });
 
-    // Theme Management
     themeButtons.forEach(button => {
         button.addEventListener('click', () => {
             const theme = button.getAttribute('data-theme');
@@ -78,11 +168,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Load Saved Theme
     const savedTheme = localStorage.getItem('app-theme') || 'dark';
     document.body.className = `theme-${savedTheme}`;
 
-    // Time Format Management
     let timeFormat = localStorage.getItem('time-format') || '12';
     timeFormatSelect.value = timeFormat;
 
@@ -92,19 +180,16 @@ document.addEventListener('DOMContentLoaded', () => {
         showToast(`Time format changed to ${timeFormat}-hour`, 'info');
     });
 
-    // Clock Functionality
     function updateClock() {
         const now = new Date();
         let hours = now.getHours();
         const minutes = String(now.getMinutes()).padStart(2, '0');
         const seconds = String(now.getSeconds()).padStart(2, '0');
         let ampm = '';
-
-        // Time format conversion
         if (timeFormat === '12') {
             ampm = hours >= 12 ? 'PM' : 'AM';
             hours = hours % 12;
-            hours = hours ? hours : 12; // handle midnight
+            hours = hours ? hours : 12;
         }
 
         const formattedHours = String(hours).padStart(2, '0');
@@ -116,21 +201,18 @@ document.addEventListener('DOMContentLoaded', () => {
         dateDisplay.textContent = `${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
     }
 
-    // Alarm Functionality
     let alarms = JSON.parse(localStorage.getItem('alarms')) || [];
 
     function renderAlarms() {
         alarmList.innerHTML = '';
+        alarms = JSON.parse(localStorage.getItem('alarms')) || []; // Refresh alarms from storage
         alarms.forEach((alarm, index) => {
             const alarmItem = document.createElement('div');
             alarmItem.classList.add('alarm-item');
-            
             const alarmTime = document.createElement('span');
             alarmTime.textContent = alarm;
-            
             const actions = document.createElement('div');
             actions.classList.add('alarm-item-actions');
-
             const snoozeBtn = document.createElement('button');
             snoozeBtn.innerHTML = '⏰';
             snoozeBtn.classList.add('snooze-alarm');
@@ -161,13 +243,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 renderAlarms();
                 showToast('Alarm deleted', 'warning');
             });
-
             actions.appendChild(snoozeBtn);
             actions.appendChild(deleteBtn);
-
             alarmItem.appendChild(alarmTime);
             alarmItem.appendChild(actions);
-            
             alarmList.appendChild(alarmItem);
         });
     }
@@ -188,25 +267,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Alarm Check
     function checkAlarms() {
         const now = new Date();
         let hours = now.getHours();
         const minutes = now.getMinutes();
         const ampm = hours >= 12 ? 'PM' : 'AM';
-        
         hours = hours % 12 || 12;
         const currentTime = `${hours}:${String(minutes).padStart(2, '0')} ${ampm}`;
-
+        
         alarms.forEach((alarm, index) => {
             if (alarm === currentTime) {
-                // Show vibrating toast
-                showToast(`Alarm: ${alarm}`, 'alarm');
+                showAlarmToast(alarm);
             }
         });
     }
 
-    // Timer Functionality
     let timerInterval;
     let totalSeconds = 0;
     let isTimerRunning = false;
@@ -219,7 +294,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const hours = Math.floor(totalSeconds / 3600);
                 const minutes = Math.floor((totalSeconds % 3600) / 60);
                 const seconds = totalSeconds % 60;
-                
                 timerDisplay.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
             }, 1000);
             startTimerBtn.textContent = 'Pause';
@@ -238,11 +312,8 @@ document.addEventListener('DOMContentLoaded', () => {
         startTimerBtn.textContent = 'Start';
     }
 
-    // Event Listeners
     startTimerBtn.addEventListener('click', startTimer);
     resetTimerBtn.addEventListener('click', resetTimer);
-
-    // Initial render and continuous updates
     renderAlarms();
     updateClock();
     setInterval(updateClock, 1000);
