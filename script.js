@@ -14,6 +14,73 @@ document.addEventListener('DOMContentLoaded', () => {
     const toastContainer = document.createElement('div');
     toastContainer.id = 'toast-container';
     document.body.appendChild(toastContainer);
+    const countdownHoursInput = document.getElementById('countdown-hours');
+    const countdownMinutesInput = document.getElementById('countdown-minutes');
+    const countdownSecondsInput = document.getElementById('countdown-seconds');
+    const countdownDisplay = document.getElementById('countdown-display');
+    const startCountdownBtn = document.getElementById('start-countdown-btn');
+    const pauseCountdownBtn = document.getElementById('pause-countdown-btn');
+    const resetCountdownBtn = document.getElementById('reset-countdown-btn');
+    let countdownInterval;
+    let remainingTime = 0;
+    let isCountdownRunning = false;
+
+    function updateCountdownDisplay() {
+        const hours = Math.floor(remainingTime / 3600);
+        const minutes = Math.floor((remainingTime % 3600) / 60);
+        const seconds = remainingTime % 60;
+        countdownDisplay.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+
+    function startCountdown() {
+        if (!isCountdownRunning && remainingTime > 0) {
+            isCountdownRunning = true;
+            countdownInterval = setInterval(() => {
+                remainingTime--;
+                updateCountdownDisplay();
+
+                if (remainingTime <= 0) {
+                    clearInterval(countdownInterval);
+                    isCountdownRunning = false;
+                    showToast('Countdown finished!', 'success');
+                    startCountdownBtn.textContent = 'Start';
+                    pauseCountdownBtn.disabled = true;
+                }
+            }, 1000);
+            startCountdownBtn.textContent = 'Running';
+            pauseCountdownBtn.disabled = false;
+        }
+    }
+
+    function pauseCountdown() {
+        if (isCountdownRunning) {
+            clearInterval(countdownInterval);
+            isCountdownRunning = false;
+            startCountdownBtn.textContent = 'Resume';
+        }
+    }
+
+    function resetCountdown() {
+        clearInterval(countdownInterval);
+        isCountdownRunning = false;
+        const hours = parseInt(countdownHoursInput.value) || 0;
+        const minutes = parseInt(countdownMinutesInput.value) || 0;
+        const seconds = parseInt(countdownSecondsInput.value) || 0;
+        remainingTime = hours * 3600 + minutes * 60 + seconds;
+        updateCountdownDisplay();
+        startCountdownBtn.textContent = 'Start';
+        pauseCountdownBtn.disabled = true;
+    }
+    startCountdownBtn.addEventListener('click', () => {
+        if (!isCountdownRunning && remainingTime === 0) {
+            resetCountdown();
+        }
+        startCountdown();
+    });
+
+    pauseCountdownBtn.addEventListener('click', pauseCountdown);
+    resetCountdownBtn.addEventListener('click', resetCountdown);
+    pauseCountdownBtn.disabled = true;
 
     function showToast(message, type = 'info') {
         const container = document.getElementById('toast-container') || (() => {
@@ -38,6 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 500);
         }, 3000);
     }
+
     function showAlarmToast(alarmTime) {
         const container = document.getElementById('toast-container') || (() => {
             const newContainer = document.createElement('div');
@@ -63,6 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 alarmToast.parentElement.removeChild(alarmToast);
             }
         };
+
         const snoozeBtn = document.createElement('button');
         snoozeBtn.textContent = 'Snooze 5 min';
         snoozeBtn.className = 'alarm-btn snooze-btn';
